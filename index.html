@@ -1,198 +1,204 @@
-        /* Konaté Cheick-Yunuss Yvan */
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Maquis Express – Accueil</title>
-
+    <title>Témoignages Restaurant</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: "Segoe UI", Arial, sans-serif;
         }
 
-        body { background: #f7f7f7; }
-
-        /* HEADER */
-        header {
-            position: sticky; top: 0;
-            background: white;
-            padding: 15px 25px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            z-index: 10;
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 50px 20px;
         }
 
-        header h1 {
-            color: #d35400;
-            font-size: 22px;
-            font-weight: 700;
+        .testimonials-section {
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
-        nav a {
-            margin-left: 18px;
-            text-decoration: none;
-            color: #333;
-            font-weight: 600;
-            transition: .3s;
-        }
-        nav a:hover { color: #d35400; }
-
-        /* HERO avec image personnalisée */
-        .hero {
-            height: 60vh;
-            background: url('https://offloadmedia.feverup.com/bruxellessecrete.com/wp-content/uploads/2024/09/04162839/Couverture-BXL.jpg') center/cover no-repeat;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+        .section-title {
             text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
             color: white;
-            padding: 20px;
-            position: relative;
-        }
-        .hero::after {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background: rgba(0,0,0,0.45);
+            margin-bottom: 10px;
         }
 
-        .hero h2 {
-            font-size: 40px;
-            text-shadow: 0 3px 10px rgba(0,0,0,0.5);
-            position: relative;
-            z-index: 2;
+        .section-title p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.1rem;
         }
 
-        /* SECTIONS */
-        section { padding: 50px 25px; }
-        h3 { color: #d35400; margin-bottom: 15px; font-size: 26px; }
-
-        /* CARTES ATTRACTIVES */
-        .cards {
+        .testimonials-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 25px;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+            padding: 20px 0;
         }
 
-        .card {
+        .testimonial-card {
             background: white;
-            border-radius: 12px;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
             overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            transition: .3s;
-        }
-        .card:hover { transform: scale(1.03); }
-
-        .card img {
-            width: 100%;
-            height: 160px;
-            object-fit: cover;
         }
 
-        .card-content {
-            padding: 15px;
+        .testimonial-card::before {
+            content: '"';
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            font-size: 100px;
+            color: rgba(102, 126, 234, 0.1);
+            font-family: Georgia, serif;
         }
 
-        .card-content p {
-            color: #444; margin-bottom: 10px;
+        .testimonial-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
         }
 
-        .btn {
-            display: inline-block;
-            background: #d35400;
+        .stars {
+            color: #ffd700;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+        }
+
+        .testimonial-text {
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            font-size: 1rem;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid #f0f0f0;
+        }
+
+        .author-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
             color: white;
-            padding: 12px 20px;
-            border-radius: 8px;
-            text-decoration: none;
-            margin-top: 10px;
-            transition: .3s;
-        }
-        .btn:hover { background: #b44600; }
-
-        footer {
-            background: #222; color: white;
-            text-align: center; padding: 18px;
-            margin-top: 40px;
+            font-weight: bold;
+            font-size: 1.2rem;
         }
 
-        @media (max-width: 600px) {
-            .hero h2 { font-size: 28px; }
-            header h1 { font-size: 18px; }
+        .author-info h4 {
+            color: #333;
+            font-size: 1rem;
+            margin-bottom: 3px;
+        }
+
+        .author-info p {
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .section-title h2 {
+                font-size: 2rem;
+            }
+
+            .testimonials-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
+    <section class="testimonials-section">
+        <div class="section-title">
+            <h2>Ce que disent nos clients</h2>
+            <p>Des avis authentiques qui nous motivent chaque jour</p>
+        </div>
 
-    <!-- HEADER -->
-    <header>
-        <h1>Maquis Express</h1>
-        <nav>
-            <a href="index.html">Accueil</a>
-            <a href="menu.html">Menu</a>
-            <a href="reservation.html">Réservation</a>
-            <a href="login.html">Connexion</a>
-        </nav>
-    </header>
-
-    <!-- HERO -->
-    <div class="hero">
-        <h2>Le goût de l’Afrique, servi rapidement.</h2>
-    </div>
-
-    <!-- MENU DU JOUR -->
-    <section>
-        <h3>Menu du jour</h3>
-        <div class="cards">
-            <div class="card">
-                <img src="images/poulet-braisé.webp" alt="">
-                <div class="card-content">
-                    <p><strong>Poulet braisé</strong> – 2500 FCFA</p>
+        <div class="testimonials-grid">
+            <div class="testimonial-card">
+                <div class="stars">★★★★★</div>
+                <p class="testimonial-text">
+                    Une expérience culinaire exceptionnelle ! Les plats sont délicieux, 
+                    l'ambiance chaleureuse et le service impeccable. Je recommande vivement 
+                    ce restaurant à tous les gourmets.
+                </p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">KM</div>
+                    <div class="author-info">
+                        <h4>KOUDOU Marthin</h4>
+                        <p>Client régulier</p>
+                    </div>
                 </div>
             </div>
 
-            <div class="card">
-                <img src="images/attieke-poisson.jpg" alt="">
-                <div class="card-content">
-                    <p><strong>Attiéké + Poisson</strong> – 3000 FCFA</p>
+            <div class="testimonial-card">
+                <div class="stars">★★★★★</div>
+                <p class="testimonial-text">
+                    Le meilleur restaurant de la ville ! La qualité des produits est 
+                    remarquable et le chef sait vraiment sublimer chaque ingrédient. 
+                    Un vrai régal pour les papilles.
+                </p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">KJ</div>
+                    <div class="author-info">
+                        <h4>KOFFI Juslin</h4>
+                        <p>Amateur de gastronomie</p>
+                    </div>
                 </div>
             </div>
 
-            <div class="card">
-                <img src="images/riz-gras.jpg" alt="">
-                <div class="card-content">
-                    <p><strong>Riz gras</strong> – 2000 FCFA</p>
+            <div class="testimonial-card">
+                <div class="stars">★★★★★</div>
+                <p class="testimonial-text">
+                    Cadre magnifique, cuisine raffinée et personnel aux petits soins. 
+                    Parfait pour un dîner en amoureux ou entre amis. Nous reviendrons 
+                    sans hésiter !
+                </p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">DB</div>
+                    <div class="author-info">
+                        <h4>DOUKOURE Bernadette</h4>
+                        <p>Visiteuse enchantée</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="testimonial-card">
+                <div class="stars">★★★★☆</div>
+                <p class="testimonial-text">
+                    Excellente découverte ! Le menu est varié et créatif. Le rapport 
+                    qualité-prix est très bon. Une adresse à retenir absolument pour 
+                    les occasions spéciales.
+                </p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">CO</div>
+                    <div class="author-info">
+                        <h4>COULIBALY Odette</h4>
+                        <p>Épicurienne</p>
+                    </div>
                 </div>
             </div>
         </div>
-
-        <a href="menu.html" class="btn" style="margin-top:20px;">Voir la carte complète</a>
     </section>
-
-    <!-- RESERVATION -->
-    <section>
-        <h3>Réserver une table</h3>
-
-        <div class="cards">
-            <div class="card">
-                <img src="images/table-reservation.jpg" alt="">
-                <div class="card-content">
-                    <p>Réservez facilement une table en quelques clics.</p>
-                    <a class="btn" href="reservation.html">Accéder au formulaire</a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <footer>
-        © 2025 – Maquis Express. Tous droits réservés.
-    </footer>
-
 </body>
-</html>
-
+</html>v
