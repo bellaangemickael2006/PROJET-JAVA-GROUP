@@ -1,0 +1,916 @@
+##KONAN BELLA
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Réservation - Maquis Express</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #d4511e;
+            --secondary: #f4a261;
+            --accent: #e76f51;
+            --success: #2a9d8f;
+            --dark: #2a2a2a;
+            --light: #f8f9fa;
+            --white: #ffffff;
+            --shadow: rgba(0, 0, 0, 0.1);
+            --shadow-lg: rgba(0, 0, 0, 0.15);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Effet de particules en arrière-plan */
+        body::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background-image: 
+                radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px),
+                radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            background-position: 0 0, 25px 25px;
+            animation: particlesMove 20s linear infinite;
+            z-index: 0;
+        }
+
+        @keyframes particlesMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        /* Container principal */
+        .reservation-container {
+            background: var(--white);
+            max-width: 900px;
+            width: 100%;
+            border-radius: 25px;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            position: relative;
+            z-index: 1;
+            animation: slideUp 0.6s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* En-tête du formulaire */
+        .form-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            padding: 3rem 2rem;
+            text-align: center;
+            color: var(--white);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .form-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: rotate 15s linear infinite;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .form-header-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .form-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .form-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .form-header p {
+            font-size: 1.1rem;
+            opacity: 0.95;
+        }
+
+        /* Corps du formulaire */
+        .form-body {
+            padding: 3rem;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            margin-bottom: 3rem;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--success), var(--secondary));
+            border-radius: 10px;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        /* Groupes de formulaire */
+        .form-section {
+            margin-bottom: 2.5rem;
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+        }
+
+        .section-title::before {
+            content: '';
+            width: 4px;
+            height: 24px;
+            background: linear-gradient(180deg, var(--primary), var(--secondary));
+            border-radius: 2px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            position: relative;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.7rem;
+            color: var(--dark);
+            font-weight: 600;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .required {
+            color: var(--primary);
+            font-size: 1.2rem;
+        }
+
+        .label-icon {
+            font-size: 1.2rem;
+        }
+
+        /* Styles des inputs */
+        input, select, textarea {
+            width: 100%;
+            padding: 1rem 1.2rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: all 0.3s ease;
+            background: var(--white);
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(212, 81, 30, 0.1);
+            transform: translateY(-2px);
+        }
+
+        input:hover, select:hover, textarea:hover {
+            border-color: var(--secondary);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+            font-family: inherit;
+        }
+
+        /* Styling select personnalisé */
+        select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23d4511e' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            padding-right: 3rem;
+            cursor: pointer;
+        }
+
+        /* Compteur de caractères */
+        .char-count {
+            text-align: right;
+            font-size: 0.85rem;
+            color: #888;
+            margin-top: 0.5rem;
+        }
+
+        /* Choix de personnes stylisé */
+        .person-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+            gap: 1rem;
+        }
+
+        .person-option {
+            position: relative;
+        }
+
+        .person-option input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .person-label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 1.2rem 0.5rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: var(--white);
+            text-align: center;
+        }
+
+        .person-label:hover {
+            border-color: var(--secondary);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px var(--shadow);
+        }
+
+        .person-option input[type="radio"]:checked + .person-label {
+            border-color: var(--primary);
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: var(--white);
+            box-shadow: 0 8px 20px rgba(212, 81, 30, 0.3);
+            transform: translateY(-3px);
+        }
+
+        .person-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .person-text {
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        /* Cases à cocher stylisées */
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .checkbox-item {
+            position: relative;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .checkbox-label:hover {
+            border-color: var(--secondary);
+            background: #f9f9f9;
+        }
+
+        .checkbox-item input[type="checkbox"]:checked + .checkbox-label {
+            border-color: var(--success);
+            background: linear-gradient(135deg, rgba(42, 157, 143, 0.1), rgba(42, 157, 143, 0.05));
+        }
+
+        .checkbox-icon {
+            width: 24px;
+            height: 24px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .checkbox-item input[type="checkbox"]:checked + .checkbox-label .checkbox-icon {
+            background: var(--success);
+            border-color: var(--success);
+        }
+
+        .checkbox-item input[type="checkbox"]:checked + .checkbox-label .checkbox-icon::after {
+            content: '✓';
+            color: white;
+            font-weight: bold;
+        }
+
+        /* Bouton de soumission */
+        .form-footer {
+            padding: 2rem 3rem 3rem;
+            background: linear-gradient(180deg, transparent, #f8f9fa);
+        }
+
+        .submit-group {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 1.3rem 2rem;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            min-width: 200px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: var(--white);
+            box-shadow: 0 10px 30px rgba(212, 81, 30, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(212, 81, 30, 0.4);
+        }
+
+        .btn-primary:active {
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: var(--white);
+            color: var(--dark);
+            border: 2px solid #e0e0e0;
+        }
+
+        .btn-secondary:hover {
+            background: #f8f9fa;
+            border-color: var(--dark);
+        }
+
+        /* Info box */
+        .info-box {
+            background: linear-gradient(135deg, #e3f2fd, #e8f5e9);
+            border-left: 4px solid var(--success);
+            padding: 1.2rem;
+            border-radius: 10px;
+            margin-top: 2rem;
+            display: flex;
+            align-items: start;
+            gap: 1rem;
+        }
+
+        .info-icon {
+            font-size: 1.5rem;
+            color: var(--success);
+        }
+
+        .info-text {
+            flex: 1;
+            font-size: 0.95rem;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        /* Animations d'erreur */
+        .error {
+            border-color: #e74c3c !important;
+            animation: shake 0.5s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .reservation-container {
+                border-radius: 15px;
+                margin: 10px;
+            }
+
+            .form-header {
+                padding: 2rem 1.5rem;
+            }
+
+            .form-header h1 {
+                font-size: 1.8rem;
+            }
+
+            .form-icon {
+                font-size: 3rem;
+            }
+
+            .form-body {
+                padding: 2rem 1.5rem;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .person-selector {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .checkbox-group {
+                grid-template-columns: 1fr;
+            }
+
+            .form-footer {
+                padding: 1.5rem;
+            }
+
+            .submit-group {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                min-width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+
+            .form-header h1 {
+                font-size: 1.5rem;
+            }
+
+            .form-header p {
+                font-size: 0.95rem;
+            }
+
+            .form-body {
+                padding: 1.5rem 1rem;
+            }
+
+            .section-title {
+                font-size: 1.1rem;
+            }
+
+            .person-selector {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            input, select, textarea {
+                padding: 0.9rem 1rem;
+                font-size: 0.95rem;
+            }
+        }
+
+        /* Animations supplémentaires */
+        .form-group {
+            animation: slideInUp 0.5s ease backwards;
+        }
+
+        .form-group:nth-child(1) { animation-delay: 0.1s; }
+        .form-group:nth-child(2) { animation-delay: 0.2s; }
+        .form-group:nth-child(3) { animation-delay: 0.3s; }
+        .form-group:nth-child(4) { animation-delay: 0.4s; }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Tooltip */
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            cursor: help;
+        }
+
+        .tooltip-text {
+            visibility: hidden;
+            background-color: var(--dark);
+            color: var(--white);
+            text-align: center;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 0.85rem;
+            white-space: nowrap;
+        }
+
+        .tooltip:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="reservation-container">
+        <!-- En-tête -->
+        <div class="form-header">
+            <div class="form-header-content">
+                <div class="form-icon">🍽️</div>
+                <h1>Réservation de Table</h1>
+                <p>Garantissez votre place au Maquis Express</p>
+            </div>
+        </div>
+
+        <!-- Barre de progression -->
+        <div class="form-body">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+
+            <form id="reservationForm">
+                <!-- Section 1: Informations personnelles -->
+                <div class="form-section">
+                    <h3 class="section-title">
+                        <span>👤</span> Vos Informations
+                    </h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>
+                                <span class="label-icon">📝</span>
+                                Nom Complet
+                                <span class="required">*</span>
+                            </label>
+                            <input 
+                                type="text" 
+                                id="nom" 
+                                name="nom" 
+                                placeholder="Ex: Kouassi Jean" 
+                                required
+                            >
+                            <div class="error-message">Veuillez entrer votre nom complet</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>
+                                <span class="label-icon">📞</span>
+                                Téléphone
+                                <span class="required">*</span>
+                            </label>
+                            <input 
+                                type="tel" 
+                                id="telephone" 
+                                name="telephone" 
+                                placeholder="+225 01 02 03 04 05" 
+                                required
+                            >
+                            <div class="error-message">Numéro de téléphone invalide</div>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label>
+                                <span class="label-icon">✉️</span>
+                                Email
+                                <span class="tooltip">ℹ️
+                                    <span class="tooltip-text">Pour recevoir la confirmation</span>
+                                </span>
+                            </label>
+                            <input 
+                                type="email" 
+                                id="email" 
+                                name="email" 
+                                placeholder="votre.email@exemple.com"
+                            >
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 2: Détails de la réservation -->
+                <div class="form-section">
+                    <h3 class="section-title">
+                        <span>📅</span> Détails de votre Réservation
+                    </h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>
+                                <span class="label-icon">📆</span>
+                                Date
+                                <span class="required">*</span>
+                            </label>
+                            <input 
+                                type="date" 
+                                id="date" 
+                                name="date" 
+                                required
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label>
+                                <span class="label-icon">🕐</span>
+                                Heure
+                                <span class="required">*</span>
+                            </label>
+                            <input 
+                                type="time" 
+                                id="heure" 
+                                name="heure" 
+                                required
+                            >
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label>
+                                <span class="label-icon">👥</span>
+                                Nombre de Personnes
+                                <span class="required">*</span>
+                            </label>
+                            <div class="person-selector">
+                                <div class="person-option">
+                                    <input type="radio" id="person1" name="personnes" value="1" required>
+                                    <label for="person1" class="person-label">
+                                        <span class="person-icon">👤</span>
+                                        <span class="person-text">1</span>
+                                    </label>
+                                </div>
+                                <div class="person-option">
+                                    <input type="radio" id="person2" name="personnes" value="2">
+                                    <label for="person2" class="person-label">
+                                        <span class="person-icon">👥</span>
+                                        <span class="person-text">2</span>
+                                    </label>
+                                </div>
+                                <div class="person-option">
+                                    <input type="radio" id="person3" name="personnes" value="3">
+                                    <label for="person3" class="person-label">
+                                        <span class="person-icon">👥</span>
+                                        <span class="person-text">3</span>
+                                    </label>
+                                </div>
+                                <div class="person-option">
+                                    <input type="radio" id="person4" name="personnes" value="4">
+                                    <label for="person4" class="person-label">
+                                        <span class="person-icon">👥</span>
+                                        <span class="person-text">4</span>
+                                    </label>
+                                </div>
+                                <div class="person-option">
+                                    <input type="radio" id="person5" name="personnes" value="5">
+                                    <label for="person5" class="person-label">
+                                        <span class="person-icon">👥</span>
+                                        <span class="person-text">5</span>
+                                    </label>
+                                </div>
+                                <div class="person-option">
+                                    <input type="radio" id="person6" name="personnes" value="6+">
+                                    <label for="person6" class="person-label">
+                                        <span class="person-icon">👨‍👩‍👧‍👦</span>
+                                        <span class="person-text">6+</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label>
+                                <span class="label-icon">🎉</span>
+                                Occasion
+                            </label>
+                            <select id="occasion" name="occasion">
+                                <option value="">Sélectionnez une occasion...</option>
+                                <option value="repas">Repas Simple</option>
+                                <option value="anniversaire">Anniversaire 🎂</option>
+                                <option value="affaires">Repas d'Affaires 💼</option>
+                                <option value="romantique">Dîner Romantique 💕</option>
+                                <option value="famille">Réunion Famille 👨‍👩‍👧‍👦</option>
+                                <option value="celebration">Célébration 🎊</option>
+                                <option value="autre">Autre</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 3: Préférences -->
+                <div class="form-section">
+                    <h3 class="section-title">
+                        <span>⭐</span> Préférences & Demandes Spéciales
+                    </h3>
+                    
+                    <div class="form-group full-width">
+                        <label>
+                            <span class="label-icon">🪑</span>
+                            Préférences de Table
+                        </label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="terrasse" name="preferences" value="terrasse">
+                                <label for="terrasse" class="checkbox-label">
+                                    <span class="checkbox-icon"></span>
+                                    <span>Terrasse 🌿</span>
+                                </label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="interieur" name="preferences" value="interieur">
+                                <label for="interieur" class="checkbox-label">
+                                    <span class="checkbox-icon"></span>
+                                    <span>Intérieur 🏠</span>
+                                </label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="fenetre" name="preferences" value="fenetre">
+                                <label for="fenetre" class="checkbox-label">
+                                    <span class="checkbox-icon"></span>
+                                    <span>Près fenêtre 🪟</span>
+                                </label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="calme" name="preferences" value="calme">
+                                <label for="calme" class="checkbox-label">
+                                    <span class="checkbox-icon"></span>
+                                    <span>Zone calme 🤫</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label>
+                            <span class="label-icon">🍽️</span>
+                            Besoins Alimentaires
+                        </label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="vegetarien" name="regime" value="vegetarien">
+                                <label for="vegetarien" class="checkbox-label">
+                                    <span class="checkbox-icon"></span>
+                                    <span>Végétarien 🥗</span>
+                                </label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="halal" name="regime" value="halal">
+                                <label for="halal" class="checkbox-label">
+                                    <span class="checkbox-icon"></span>
+                                    <span>Halal 🕌</span>
+                                </label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="allergies" name="regime" value="allergies">
+                                <label for="allergies" class="checkbox-label">
+                                    <span class="checkbox-icon"></span>
+                                    <span>Allergies ⚠️</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label>
+                            <span class="label-icon">💬</span>
+                            Message Additionnel
+                        </label>
+                        <textarea 
+                            id="message" 
+                            name="message" 
+                            placeholder="Partagez-nous toute demande spéciale, allergies alimentaires, ou préférences particulières..."
+                            maxlength="500"
+                        ></textarea>
+                        <div class="char-count">
+                            <span id="charCount">0</span> / 500 caractères
+                        </div>
+                    </div>
+
+                    <div class="info-box">
+                        <span class="info-icon">💡</span>
+                        <div class="info-text">
+                            <strong>Bon à savoir :</strong> Votre réservation sera confirmée par téléphone ou email dans les 24h. 
+                            Pour toute modification, contactez-nous au +225 01 02 03 04 05.
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Footer avec boutons -->
+        <div class="form-footer">
+            <div class="submit-group">
+                <button type="button" class="btn btn-secondary">
+                    <span>↩️</span>
+                    Réinitialiser
+                </button>
+                <button type="submit" class="btn btn-primary" form="reservationForm">
+                    <span>✓</span>
+                    Confirmer ma Réservation
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Gestion du formulaire
+        const form = document.getElementById('reservationForm');
+        const progressFill = document
